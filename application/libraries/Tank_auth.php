@@ -23,13 +23,10 @@ class Tank_auth
 	function __construct()
 	{
 		$this->ci =& get_instance();
-
 		$this->ci->load->config('tank_auth', TRUE);
-
 		$this->ci->load->library('session');
 		$this->ci->load->database();
 		$this->ci->load->model('tank_auth/users');
-
 		// Try to autologin
 		$this->autologin();
 	}
@@ -130,7 +127,7 @@ class Tank_auth
 					$this->ci->session->set_userdata(array(
 							'user_id'	=> $user->id,
 							'username'	=> $user->username,
-							'image'	=> $image,
+							'image'		=> $image,
 							'status'	=> ($user->activated == 1) ? STATUS_ACTIVATED : STATUS_NOT_ACTIVATED,
 					));
 
@@ -138,7 +135,7 @@ class Tank_auth
 						$this->error = array('not_activated' => '');
 
 					} else {												// success
-						if ($remember) {
+						if (isset($remember)) {
 							$this->create_autologin($user->id);
 						}
 
@@ -216,7 +213,7 @@ class Tank_auth
 	 * @param	bool
 	 * @return	array
 	 */
-	function create_user($username, $firstname, $lastname, $email, $password, $email_activation)
+	function create_user($username, $firstname, $lastname, $email, $password, $mobile_no, $profile_for, $gender, $dob, $email_activation)
 	{
 		if ((strlen($username) > 0) AND !$this->ci->users->is_username_available($username)) {
 			$this->error = array('username' => 'auth_username_in_use');
@@ -232,12 +229,16 @@ class Tank_auth
 			$hashed_password = $hasher->HashPassword($password);
 
 			$data = array(
-				'username'	=> $username,
-				'password'	=> $hashed_password,
-				'email'		=> $email,
+				'username'		=> $username,
+				'password'		=> $hashed_password,
+				'email'			=> $email,
 				'firstname'		=> $firstname,
 				'lastname'		=> $lastname,
-				'last_ip'	=> $this->ci->input->ip_address(),
+				'mobile_no'		=> $mobile_no,
+				'profile_for'		=> $profile_for,
+				'gender'		=> $gender,
+				'dob'			=> $dob,
+				'last_ip'		=> $this->ci->input->ip_address(),
 			);
 
 			if ($email_activation) {
@@ -732,6 +733,4 @@ class Tank_auth
 		}
 	}
 }
-
-/* End of file Tank_auth.php */
-/* Location: ./application/libraries/Tank_auth.php */
+?>

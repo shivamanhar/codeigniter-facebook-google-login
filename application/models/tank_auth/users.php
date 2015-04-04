@@ -393,6 +393,4 @@ class Users extends CI_Model
 		$this->db->delete($this->profile_table_name);
 	}
 }
-
-/* End of file users.php */
-/* Location: ./application/models/auth/users.php */
+?>
